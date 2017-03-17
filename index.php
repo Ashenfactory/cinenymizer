@@ -311,7 +311,16 @@ function cinenymize( $title = null )
 
 		cli($new_title, $title);
 
+	} else {
+
+		web_view($new_title, $title);
+
 	}
+}
+
+function web_view($new_title, $original_title)
+{
+	include 'site.php';
 }
 
 function cli($new_title, $title)
@@ -339,12 +348,6 @@ function cli($new_title, $title)
 	$line = fgets( $handle );
 
 	cinenymize(trim($line));
-}
-
-if ( !php_sapi_name() == "cli" ) {
-
-	include 'site.php';
-
 }
 
 if ( !empty( $argv[1] ) ) {
