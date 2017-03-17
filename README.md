@@ -7,4 +7,4 @@ Open through Git Bash (probably works with other CLIs, who knows) to engage in a
 
 Optionally provide a text of your own as a parameter to confound yourself and others with the grammatical nonsense that will inevitably ensue.
 
-*Example:* `php index.php "The Lord of the Rings"`
+*Example:* `php index.php "The Lord of the Rings"` → `"The Patriarch of the Lassos"`
