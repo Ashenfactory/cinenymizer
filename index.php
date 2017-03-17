@@ -1,7 +1,13 @@
 <?php
+ini_set('memory_limit', '512M');
+
 require_once 'thesaurus.php';
 
 require_once 'movies.php';
+
+require_once 'names.php';
+
+require_once 'places.php';
 
 $ignored_words = [
 	'the', 'a', 'an', 'or', 'is', 'not', 'with',
@@ -95,13 +101,6 @@ $uncountable = [
 
 $uncountable = array_flip($uncountable);
 
-$names = [
-	'harry' => ['harold', 'harris', 'harrison', 'henry'],
-	'benjamin' => ['ben', 'benjy', 'benny'],
-	'william' => ['will', 'bill', 'billy', 'willy'],
-	'bob' => ['rob', 'robert', 'robby', 'bobby']
-];
-
 function pluralize( $string )
 {
 	global $plural, $singular, $irregular, $uncountable;
@@ -160,10 +159,33 @@ function synonymous_name( $name )
 {
 	global $names;
 
-	if ( !empty( $names[$name] ) ) {
-		$key = random_key($names[$name]);
+	foreach ($names as $nameCollection) {
 
-		return $names[$name][$key];
+		foreach ($nameCollection as $nameVal) {
+
+			if($nameVal == $name) {
+				$key = array_search($nameVal, $nameCollection);
+
+				unset($nameCollection[$key]);
+
+				$key = random_key($nameCollection);
+
+				return $nameCollection[$key];
+			}
+		}
+	}
+
+	return false;
+}
+
+function synonymous_place( $place )
+{
+	global $places;
+
+	if ( !empty( $places[$place] ) ) {
+		$key = random_key($places[$place]);
+
+		return $places[$place][$key];
 	}
 
 	return false;
@@ -225,10 +247,14 @@ function cinenymize( $title = null )
 		if ( !isset( $ignored_words[$word] ) && !is_numeric( $word ) ) {
 
 			if ( $name_word = synonymous_name( $word ) ) {
-
 				//The word is a name, pick a nickname
 				$word = ucfirst( $name_word );
 
+			}
+
+			if ( $place_word = synonymous_place( $word ) ) {
+				//The word is a place name, pick a nickname
+				$word = ucfirst( $place_word );
 			}
 
 			if ( !isset( $thesaurus[$word] ) && ( strlen( $word ) >= 6 ) ) {
@@ -246,7 +272,7 @@ function cinenymize( $title = null )
 				}
 			}
 
-			if (!$name_word) {
+			if (!$name_word && !$place_word) {
 
 				//Check if word exists in the thesaurus
 				if (!isset($thesaurus[$word])) {
@@ -273,7 +299,7 @@ function cinenymize( $title = null )
 
 
 			//Replace the original word in the title and restore any suffixes
-			if ($synonym) {
+			if ($synonym || $name_word || $place_word) {
 				$title_words[$index] = ucwords($word . $suffix);
 			}
 		}
