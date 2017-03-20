@@ -9,6 +9,8 @@ require_once 'names.php';
 
 require_once 'places.php';
 
+$vowels = ['a', 'e', 'i', 'o', 'u'];
+
 $ignored_words = [
 	'the', 'a', 'an', 'or', 'is', 'not', 'with',
 	'i', 'you', 'he', 'she', 'it', 'we', 'they', 'me', 'us', 'her', 'his', 'their', 'them',
@@ -223,6 +225,7 @@ function cinenymize( $title = null )
 	global $movies;
 	global $thesaurus;
 	global $ignored_words;
+	global $vowels;
 
 	if ( empty( $title ) ) {
 
@@ -272,10 +275,10 @@ function cinenymize( $title = null )
 				}
 			}
 
-			if (!$name_word && !$place_word) {
+			if ( !$name_word && !$place_word ) {
 
 				//Check if word exists in the thesaurus
-				if (!isset($thesaurus[$word])) {
+				if ( !isset( $thesaurus[$word] ) ) {
 					$word = singularize( $word );
 					$plural_word = true;
 				}
@@ -297,10 +300,17 @@ function cinenymize( $title = null )
 				}
 			}
 
-
 			//Replace the original word in the title and restore any suffixes
-			if ($synonym || $name_word || $place_word) {
-				$title_words[$index] = ucwords($word . $suffix);
+			if ( $synonym || $name_word || $place_word ) {
+				$title_words[$index] = ucwords( $word . $suffix );
+
+				if ($index > 0) {
+					if ( strtolower($title_words[$index - 1]) == 'a' && in_array( substr( $word, 0, 1 ), $vowels ) ) {
+						$title_words[$index - 1] = $title_words[$index - 1] . 'n';
+					} elseif ( strtolower($title_words[$index - 1]) == 'an' && !in_array( substr( $word, 0, 1 ), $vowels ) ) {
+						$title_words[$index - 1] = substr($title_words[$index - 1], 1);
+					}
+				}
 			}
 		}
 	}
@@ -309,21 +319,21 @@ function cinenymize( $title = null )
 
 	if ( php_sapi_name() == "cli" ) {
 
-		cli($new_title, $title);
+		cli( $new_title, $title );
 
 	} else {
 
-		web_view($new_title, $title);
+		web_view( $new_title, $title );
 
 	}
 }
 
-function web_view($new_title, $original_title)
+function web_view( $new_title, $original_title )
 {
 	include 'site.php';
 }
 
-function cli($new_title, $title)
+function cli( $new_title, $title )
 {
 //	system( 'reset' );
 	echo "\n  What's this movie: \"{$new_title}\"?\n  Answer: ";
@@ -352,8 +362,8 @@ function cli($new_title, $title)
 
 if ( !empty( $argv[1] ) ) {
 	$title = $argv[1];
-} elseif ( !empty( $_POST['title'] ) ) {
-	$title = $_POST['title'];
+} elseif ( !empty( $_GET['title'] ) ) {
+	$title = $_GET['title'];
 } else {
 	$title = $movies[random_key( $movies )];
 }
