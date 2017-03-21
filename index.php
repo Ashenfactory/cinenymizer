@@ -305,10 +305,14 @@ function cinenymize( $title = null )
 				$title_words[$index] = ucwords( $word . $suffix );
 
 				if ($index > 0) {
-					if ( strtolower($title_words[$index - 1]) == 'a' && in_array( substr( $word, 0, 1 ), $vowels ) ) {
+					$last_word = strtolower($title_words[$index - 1]);
+
+					if ( $last_word == 'a' && in_array( substr( $word, 0, 1 ), $vowels ) ) {
 						$title_words[$index - 1] = $title_words[$index - 1] . 'n';
-					} elseif ( strtolower($title_words[$index - 1]) == 'an' && !in_array( substr( $word, 0, 1 ), $vowels ) ) {
+					} elseif ( $last_word == 'an' && !in_array( substr( $word, 0, 1 ), $vowels ) ) {
 						$title_words[$index - 1] = substr($title_words[$index - 1], 1);
+					} elseif ( $last_word == 'the' && substr( $word, 0, 4 ) == 'the ' ) {
+						$title_word[$index - 1] = '';
 					}
 				}
 			}
@@ -364,6 +368,8 @@ if ( !empty( $argv[1] ) ) {
 	$title = $argv[1];
 } elseif ( !empty( $_GET['title'] ) ) {
 	$title = $_GET['title'];
+} elseif ( !empty( $_POST['title'] ) ) {
+	$title = $_POST['title'];
 } else {
 	$title = $movies[random_key( $movies )];
 }

@@ -1,7 +1,11 @@
 <!DOCTYPE html>
-<html>
+<html lang="en-us">
 <head>
+	<meta charset="utf-8">
+	<meta http-equiv="x-ua-compatible" content="ie=edge">
 	<title>Cinenymizer</title>
+	<meta name="description" content="A silly gizmo that synonomizes movie titles (or any other text to be fair) for the sake of hilarity.">
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
 	<style type="text/css">
 		html, body {
 			margin: 0;
@@ -24,6 +28,12 @@
 			color: #fff;
 		}
 
+		.question {
+			border-bottom: 2px solid #ebebeb;
+			border-radius: 0;
+			padding-bottom: 1em;
+		}
+
 		.container {
 			height: 100%;
 			display: flex;
@@ -35,10 +45,12 @@
 			flex: none;
 			align-self: center;
 			text-align: center;
+			width: 90%;
+			margin-right: 10px;
+			margin-left: 10px;
 		}
 
 		.block > p {
-			border-radius: 25px;
 			padding: 10px;
 			font-size: 2em;
 			margin-bottom: 0.5em;
@@ -51,8 +63,8 @@
 		.refresh > a {
 			font-size: 2em;
 			margin: 0 auto;
-			display: block;
 			width: 1em;
+			display: block;
 			transition: transform 0.5s ease 0s;
 		}
 
@@ -61,47 +73,33 @@
 		}
 
 		.spoiler {
-			color: #4e5d6c;
-			-webkit-touch-callout: none;
-			-webkit-user-select: none;
-			-khtml-user-select: none;
-			-moz-user-select: none;
-			-ms-user-select: none;
-			user-select: none;
-		}
-
-		.spoiler:hover {
-			color: #485563;
-		}
-
-		.spoiler:active {
-			color: #2a323a;
+			color: rgba(0, 0, 0, 0);
 		}
 
 		.spoiler:hover, .answer:hover {
 			background-color: #485563;
 		}
 
-		.answer:active {
+		a:active, .answer:active {
 			color: #fff;
 		}
 
-		.spoiler:active, .answer:active {
-			background-color: #2a323a;
-		}
-
 		.spoiler, .answer {
+			transition: all 0.2s ease 0s;
+			border-radius: 25px;
 			background-color: #4e5d6c;
 			cursor: pointer;
+			-webkit-user-select: none;
+			-moz-user-select: none;
+			-ms-user-select: none;
+			user-select: none;
 		}
 
-		hr {
-			color: #ebebeb;
-		}
-
-		@media (min-width: 768px) {
+		@media (min-width: 992px) {
 			.block {
 				width: 50%;
+				margin-right: 0;
+				margin-left: 0;
 			}
 		}
 	</style>
@@ -110,7 +108,6 @@
 	<div class="container">
 		<div class="block">
 			<p id="question" class="question"><?= $new_title ?></p>
-			<hr>
 			<p id="answer" title="Get the answer" class="spoiler"><?= $original_title ?></p>
 			<p class="refresh"><a title="Next Title" href="index.php">&#x21ba;</a></p>
 		</div>

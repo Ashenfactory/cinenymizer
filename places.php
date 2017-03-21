@@ -41,6 +41,9 @@ $places = [
 	//Israel
 	'jerusalem' 	=> ['jerusalem', 'the holy city'],
 
+	//Japan
+	'tokyo'			=> ['tokyo', 'edo'],
+
 	/*-----------*\
 	|	Conties
 	\*-----------*/
