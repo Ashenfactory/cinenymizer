@@ -78,6 +78,7 @@
 			font-size: 2em;
 			margin: 0 auto;
 			width: 1em;
+			line-height: 1em;
 			display: block;
 			transition: transform 0.5s ease 0s;
 		}
