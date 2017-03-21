@@ -7,6 +7,12 @@
 	<meta name="description" content="A silly gizmo that synonomizes movie titles (or any other text to be fair) for the sake of hilarity.">
 	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
 	<style type="text/css">
+		@keyframes rotate {
+			to {
+				-webkit-transform: rotate(-360deg);
+			}
+		}
+
 		html, body {
 			margin: 0;
 			padding: 0;
@@ -15,7 +21,8 @@
 
 		body {
 			font-family: "Segoe UI", Frutiger, "Frutiger Linotype", "Dejavu Sans", "Helvetica Neue", Arial, sans-serif;
-			background-color: #2b3e50;
+			background: #2b3e50;
+			background: linear-gradient(#39444e, #2b3e50);
 			color: #ebebeb;
 		}
 
@@ -60,6 +67,13 @@
 			margin-top: 0;
 		}
 
+		.refresh .anim {
+			animation-name: rotate;
+			animation-duration: 0.5s;
+			animation-iteration-count: infinite;
+			animation-timing-function: ease;
+		}
+
 		.refresh > a {
 			font-size: 2em;
 			margin: 0 auto;
@@ -68,16 +82,12 @@
 			transition: transform 0.5s ease 0s;
 		}
 
-		.refresh > a:hover {
-			transform: rotate(-360deg);
-		}
-
 		.spoiler {
 			color: rgba(0, 0, 0, 0);
 		}
 
 		.spoiler:hover, .answer:hover {
-			background-color: #485563;
+			background: #485563;
 		}
 
 		a:active, .answer:active {
@@ -87,7 +97,7 @@
 		.spoiler, .answer {
 			transition: all 0.2s ease 0s;
 			border-radius: 25px;
-			background-color: #4e5d6c;
+			background: #4e5d6c;
 			cursor: pointer;
 			-webkit-user-select: none;
 			-moz-user-select: none;
@@ -109,20 +119,31 @@
 		<div class="block">
 			<p id="question" class="question"><?= $new_title ?></p>
 			<p id="answer" title="Get the answer" class="spoiler"><?= $original_title ?></p>
-			<p class="refresh"><a title="Next Title" href="index.php">&#x21ba;</a></p>
+			<p class="refresh"><a id="refresh" title="Next Title" href="index.php">&#x21ba;</a></p>
 		</div>
 	</div>
 	<script type="text/javascript">
-		var elem = document.getElementById('answer');
-		elem.onclick = function() {
-			if (elem.className == 'spoiler') {
-				elem.title = '';
-				elem.className = 'answer';
+		var answer = document.getElementById('answer');
+		var refresh = document.getElementById('refresh');
+
+		answer.onclick = function() {
+			if (answer.className == 'spoiler') {
+				answer.title = '';
+				answer.className = 'answer';
 			} else {
-				elem.title = "Get the answer";
-				elem.className = 'spoiler';
+				answer.title = "Get the answer";
+				answer.className = 'spoiler';
 			}
 		};
+
+		refresh.addEventListener('mouseenter', function() {
+			refresh.className = 'anim';
+		});
+
+		refresh.addEventListener('animationiteration', function() {
+			refresh.className = '';
+			refresh.removeEventListener(animationiteration);
+		});
 	</script>
 </body>
 </html>
